@@ -99,9 +99,14 @@ extern "C"
 #define ADC_LESS_THAN          0   /*!< ADC compare condition is "less than the compare value"                  \hideinitializer */
 #define ADC_GREATER_OR_EQUAL   1   /*!< ADC compare condition is "greater than or equal to the compare value"   \hideinitializer */
 
-
+/*--------------------------------------------------------------------------------------------------*/
+/* Define Error Code                                                                                */
+/*--------------------------------------------------------------------------------------------------*/
+#define ADC_TIMEOUT_ERR     (-1)    /*!< ADC operation abort due to timeout error \hideinitializer */
 
 /*@}*/ /* end of group ADC_EXPORTED_CONSTANTS */
+
+extern int32_t g_ADC_i32ErrCode;
 
 /** @addtogroup ADC_EXPORTED_FUNCTIONS ADC Exported Functions
   @{
@@ -263,6 +268,26 @@ extern "C"
   * \hideinitializer
   */
 #define ADC_DISABLE_CMP1(adc) ((adc)->ADCMPR[1] = 0)
+
+/**
+  * @brief Enable the compare window mode.
+  * @param[in] adc The pointer of the specified ADC module.
+  * @param[in] u32CMP Specifies the compare register, valid value are 0.
+  * @return None
+  * @details CMPF0 (ADSR0[1]) will be set when both ADC_CMP0 and ADC_CMP1 compared condition matched.
+  * \hideinitializer
+  */
+#define ADC_ENABLE_CMP_WINDOW_MODE(adc, u32CMP) ((adc)->ADCMPR[(u32CMP)] |= ADC_ADCMPR_CMPWEN_Msk)
+
+/**
+  * @brief Disable the compare window mode.
+  * @param[in] adc The pointer of the specified ADC module.
+  * @param[in] u32CMP Specifies the compare register, valid value are 0.
+  * @return None
+  * @details Disable the compare window mode for specified ADC module.
+  * \hideinitializer
+  */
+#define ADC_DISABLE_CMP_WINDOW_MODE(adc, u32CMP) ((adc)->ADCMPR[(u32CMP)] &= ~ADC_ADCMPR_CMPWEN_Msk)
 
 /**
   * @brief Set ADC input channel.

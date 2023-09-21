@@ -86,17 +86,19 @@ void TIMER_Close(TIMER_T *timer)
   * @param[in]  timer       The pointer of the specified Timer module.
   * @param[in]  u32Usec     Delay period in micro seconds. Valid values are between 100~1000000 (100 micro second ~ 1 second).
   *
-  * @return     None
+  * @return     Delay success or not
+  * @retval     0 Success, target delay time reached
+  * @retval     TIMER_TIMEOUT_ERR Delay function execute failed due to timer stop working
   *
   * @details    This API is used to create a delay loop for u32Usec micro seconds by using timer one-shot mode.
   * @note       This API overwrites the register setting of the timer used to count the delay time.
   * @note       This API use polling mode. So there is no need to enable interrupt for the timer module used to generate delay.
   */
-void TIMER_Delay(TIMER_T *timer, uint32_t u32Usec)
+int32_t TIMER_Delay(TIMER_T *timer, uint32_t u32Usec)
 {
     uint32_t u32Clk = TIMER_GetModuleClock(timer);
-    uint32_t u32Prescale = 0, delay = (SystemCoreClock / u32Clk) + 1;
-    uint32_t u32Cmpr, u32NsecPerTick;
+    uint32_t u32Prescale = 0UL, u32Delay;
+    uint32_t u32Cmpr, u32Cntr, u32NsecPerTick, i = 0UL;
 
     /* Clear current timer configuration */
     timer->CTL = 0;
@@ -134,14 +136,37 @@ void TIMER_Delay(TIMER_T *timer, uint32_t u32Usec)
     timer->CMP = u32Cmpr;
     timer->CTL = TIMER_CTL_CNTEN_Msk | TIMER_ONESHOT_MODE | u32Prescale;
 
-    /* When system clock is faster than timer clock, it is possible timer active bit cannot set in time while we check it. */
-    /* And the while loop below return immediately, so put a tiny delay here allowing timer start counting and raise active flag. */
-    for(; delay > 0; delay--)
+    /* When system clock is faster than timer clock, it is possible timer active bit cannot set
+       in time while we check it. And the while loop below return immediately, so put a tiny
+       delay larger than 1 ECLK here allowing timer start counting and raise active flag. */
+    for(u32Delay = (SystemCoreClock / u32Clk) + 1UL; u32Delay > 0UL; u32Delay--)
     {
         __NOP();
     }
 
-    while(timer->CTL & TIMER_CTL_ACTSTS_Msk);
+    /* Add a bail out counter here in case timer clock source is disabled accidentally.
+       Prescale counter reset every ECLK * (prescale value + 1).
+       The u32Delay here is to make sure timer counter value changed when prescale counter reset */
+    u32Delay = (SystemCoreClock / TIMER_GetModuleClock(timer)) * (u32Prescale + 1);
+    u32Cntr = timer->CNT;
+    i = 0;
+    while(timer->CTL & TIMER_CTL_ACTSTS_Msk)
+    {
+        /* Bailed out if timer stop counting e.g. Some interrupt handler close timer clock source. */
+        if(u32Cntr == timer->CNT)
+        {
+            if(i++ > u32Delay)
+            {
+                return TIMER_TIMEOUT_ERR;
+            }
+        }
+        else
+        {
+            i = 0;
+            u32Cntr = timer->CNT;
+        }
+    }
+    return 0;
 }
 
 /**
@@ -322,6 +347,37 @@ void TIMER_SetTriggerSource(TIMER_T *timer, uint32_t u32Src)
 void TIMER_SetTriggerTarget(TIMER_T *timer, uint32_t u32Mask)
 {
     timer->CTL = (timer->CTL & ~(TIMER_CTL_TRGPWM_Msk | TIMER_CTL_TRGADC_Msk | TIMER_CTL_TRGPDMA_Msk | TIMER_CTL_TRGBPWM_Msk)) | (u32Mask);
+}
+
+/**
+  * @brief      Select Timer Capture Source
+  *
+  * @param[in]  timer       The pointer of the specified Timer module.
+  * @param[in]  u32Src      Timer capture source. Possible values are
+  *                         - \ref TIMER_CAPTURE_FROM_EXTERNAL
+  *                         - \ref TIMER_CAPTURE_FROM_INTERNAL
+  *                         - \ref TIMER_CAPTURE_FROM_ACMP0
+  *                         - \ref TIMER_CAPTURE_FROM_ACMP1
+  *                         - \ref TIMER_CAPTURE_FROM_LIRC
+  *
+  * @return     None
+  *
+  * @details    This API is used to select timer capture source from Tx_EXT or internal signal.
+  */
+void TIMER_CaptureSelect(TIMER_T *timer, uint32_t u32Src)
+{
+    if (u32Src == TIMER_CAPTURE_FROM_EXTERNAL)
+    {
+        timer->CTL = (timer->CTL & ~(TIMER_CTL_CAPSRC_Msk)) |
+                     (TIMER_CAPSRC_TX_EXT);
+    }
+    else
+    {
+        timer->CTL = (timer->CTL & ~(TIMER_CTL_CAPSRC_Msk)) |
+                     (TIMER_CAPSRC_INTERNAL);
+        timer->EXTCTL = (timer->EXTCTL & ~(TIMER_EXTCTL_INTERCAPSEL_Msk)) |
+                        (u32Src);
+    }
 }
 
 /*@}*/ /* end of group TIMER_EXPORTED_FUNCTIONS */
