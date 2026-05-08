@@ -12,6 +12,7 @@
 #include "targetdev.h"
 #include "hid_transfer.h"
 
+#define TRIM_INIT           (SYS_BASE+0x118)
 
 /*--------------------------------------------------------------------------*/
 void SYS_Init(void)
@@ -35,6 +36,8 @@ void SYS_Init(void)
     CLK->APBCLK0 |= CLK_APBCLK0_USBDCKEN_Msk ;
     /* Update System Core Clock */
     SystemCoreClockUpdate();
+    /* Lock protected registers */
+    SYS_LockReg();
 }
 
 /*---------------------------------------------------------------------------------------------------------*/
@@ -42,8 +45,8 @@ void SYS_Init(void)
 /*---------------------------------------------------------------------------------------------------------*/
 int32_t main(void)
 {
-    /* Unlock protected registers */
-    SYS_UnlockReg();
+    uint32_t u32TrimInit;
+
     /* Init System, peripheral clock and multi-function I/O */
     SYS_Init();
 
@@ -69,6 +72,10 @@ int32_t main(void)
 
     CLK->AHBCLK |= CLK_AHBCLK_ISPCKEN_Msk;
 
+    /* Unlock protected registers */
+    SYS_UnlockReg();
+
+    /* Enable FMC ISP function. Before using FMC function, it should unlock system register first. */
     FMC->ISPCTL |= (FMC_ISPCTL_ISPEN_Msk | FMC_ISPCTL_APUEN_Msk);
 
     g_apromSize = GetApromSize();
@@ -89,8 +96,44 @@ int32_t main(void)
     /* Enable USB device interrupt */
     NVIC_EnableIRQ(USBD_IRQn);
 
+    /* Backup default trim */
+    u32TrimInit = M32(TRIM_INIT);
+
+    /* Clear SOF */
+    USBD->INTSTS = USBD_INTSTS_SOFIF_Msk;
+		
     while (DetectPin == 0)
     {
+       /* Start USB trim if it is not enabled. */
+        if((SYS->HIRCTRIMCTL & SYS_HIRCTRIMCTL_FREQSEL_Msk) != 1)
+        {
+            /* Start USB trim only when SOF */
+            if(USBD->INTSTS & USBD_INTSTS_SOFIF_Msk)
+            {
+                /* Clear SOF */
+                USBD->INTSTS = USBD_INTSTS_SOFIF_Msk;
+
+                /* Re-enable crystal-less */
+                SYS->HIRCTRIMCTL = 0x01;
+                SYS->HIRCTRIMCTL |= SYS_HIRCTRIMCTL_REFCKSEL_Msk;
+            }
+        }
+
+        /* Disable USB Trim when error */
+        if(SYS->HIRCTRIMSTS & (SYS_HIRCTRIMSTS_CLKERIF_Msk | SYS_HIRCTRIMSTS_TFAILIF_Msk))
+        {
+            /* Init TRIM */
+            M32(TRIM_INIT) = u32TrimInit;
+
+            /* Disable crystal-less */
+            SYS->HIRCTRIMCTL = 0;
+
+            /* Clear error flags */
+            SYS->HIRCTRIMSTS = SYS_HIRCTRIMSTS_CLKERIF_Msk | SYS_HIRCTRIMSTS_TFAILIF_Msk;
+
+            /* Clear SOF */
+            USBD->INTSTS = USBD_INTSTS_SOFIF_Msk;
+        }			
         if (bUsbDataReady == TRUE)
         {
             ParseCmd((uint8_t *)usb_rcvbuf, EP3_MAX_PKT_SIZE);

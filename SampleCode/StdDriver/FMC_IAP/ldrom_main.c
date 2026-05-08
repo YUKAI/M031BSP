@@ -18,6 +18,12 @@
 
 typedef void (FUNC_PTR)(void);
 
+/* Add implementations to fix linker warnings from the newlib-nano C library in VSCode-GCC14.3.1 */
+void _close(void) {}
+void _lseek(void) {}
+void _read_r(void) {}
+void _write_r(void) {}
+
 void SYS_Init(void)
 {
     /* Unlock protected registers */
@@ -131,10 +137,11 @@ int main()
     PutString("|            [LDROM code]            |\n");
     PutString("+------------------------------------+\n");
 
-    /* Unlock protected registers to operate FMC ISP function */
+    /* Unlock protected registers */
     SYS_UnlockReg();
 
-    FMC_Open();                        /* Enable FMC ISP function */
+    /* Enable FMC ISP function. Before using FMC function, it should unlock system register first. */
+    FMC_Open();
 
     PutString("\n\nPress any key to branch to APROM...\n");
     GetChar();                         /* block on waiting for any one character input from UART0 */
@@ -155,8 +162,6 @@ int main()
 
     /* Software reset to boot to LDROM */
     NVIC_SystemReset();
-
-    while (1);
 }
 
 /*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/

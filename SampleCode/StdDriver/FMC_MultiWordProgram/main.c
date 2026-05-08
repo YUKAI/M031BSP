@@ -52,9 +52,6 @@ int32_t main(void)
     /* Init System, IP clock and multi-function I/O. */
     SYS_Init();
 
-    /* Unlock protected registers to operate FMC ISP function */
-    SYS_UnlockReg();
-
     /* Configure UART0: 115200, 8-bit word, no parity bit, 1 stop bit. */
     UART_Open(UART0, 115200);
 
@@ -62,7 +59,7 @@ int32_t main(void)
     if( (GET_CHIP_SERIES_NUM == CHIP_SERIES_NUM_I) || (GET_CHIP_SERIES_NUM == CHIP_SERIES_NUM_G) )
     {
         /* Checking if flash size matches with target device */
-		if(FMC_FLASH_PAGE_SIZE != 2048)
+        if(FMC_FLASH_PAGE_SIZE != 2048)
         {
             /* FMC_FLASH_PAGE_SIZE is different from target device's */
             printf("Please enable the compiler option - PAGE_SIZE_2048 in fmc.h\n");
@@ -74,29 +71,23 @@ int32_t main(void)
         printf("The target device didn't support the feature\n");
         while(SYS->PDID);
     }
-	
+
     printf("\n\n");
     printf("+-------------------------------------+\n");
     printf("|   FMC_MultiWordProgram Sample Code  |\n");
     printf("+-------------------------------------+\n");
+    printf("Check FMC function execution address\n");
+    printf("FMC_Erase: 0x%X, FMC_WriteMultiple: 0x%X, FMC_Read: 0x%X\n",
+           (uint32_t)FMC_Erase, (uint32_t)FMC_WriteMultiple, (uint32_t)FMC_Read);
 
-    /* Enable FMC ISP function */
+    /* Unlock protected registers */
+    SYS_UnlockReg();
+
+    /* Enable FMC ISP function. Before using FMC function, it should unlock system register first. */
     FMC_Open();
 
     /* Enable APROM erase/program */
     FMC_ENABLE_AP_UPDATE();
-
-#if defined (__ICCARM__)
-#pragma section = "fastcode"
-#pragma section = "fastcode_init"
-
-    printf("Source Addr = 0x%x\n", (uint32_t)__section_begin("fastcode_init"));
-    printf("DST Addr = 0x%x\n", (uint32_t)__section_begin("fastcode"));
-    memcpy((void *) __section_begin("fastcode"), __section_begin("fastcode_init"), (unsigned long) __section_size("fastcode"));
-
-#elif defined (__GNUC__)
-
-#endif
 
     if( multi_word_program() >= 0)
         printf("\n\nMulti-word program demo done.\n");

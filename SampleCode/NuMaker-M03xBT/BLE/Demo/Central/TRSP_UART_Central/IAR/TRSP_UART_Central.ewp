@@ -350,7 +350,7 @@
                 <option>
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$\..\..\..\..\..\..\..\Library\Device\Nuvoton\M031\Include</state>
-                    <state>$PROJ_DIR$\..\..\..\..\..\..\..\Library\CMSIS\Include</state>
+                    <state>$PROJ_DIR$\..\..\..\..\..\..\..\Library\CMSIS\Core\Include</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\..\..\Library\StdDriver\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\Source\Include</state>
                     <state>$PROJ_DIR$\..\..\..\..\Source\Porting</state>
@@ -1175,6 +1175,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\user.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\data_flash.c</name>
         </file>
     </group>
 </project>

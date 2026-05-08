@@ -122,7 +122,7 @@ void UART0_Init()
  *
  * @param       u32CycleResolution   Target generator duty cycle resolution. The value in general is 100.
  *
- * @return      The compatator value by new duty cycle
+ * @return      The comparator value by new duty cycle
  */
 uint32_t CalNewDutyCMR(PWM_T *pwm, uint32_t u32ChannelNum, uint32_t u32DutyCycle, uint32_t u32CycleResolution)
 {
@@ -165,7 +165,7 @@ int32_t main(void)
     printf("  This sample code will use PWM0 channel 0 to output waveform, and switch duty cycle.\n");
     printf("  I/O configuration:\n");
     printf("    waveform output pin: PWM0 channel 0(PB.5)\n");
-    printf("\nOutput waveform is 1200 Hz and it's duty is 50%.\n");
+    printf("\nOutput waveform is 1200 Hz and it's duty is 50%%.\n");
 
     /*
       Configure PWM0 channel 0 init period and duty(up counter type).

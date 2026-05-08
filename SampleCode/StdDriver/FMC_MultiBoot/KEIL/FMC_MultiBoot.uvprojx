@@ -10,14 +10,13 @@
       <TargetName>FMC_MultiBoot</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060528::V5.06 update 5 (build 528)::ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
+      <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>M032SE3AE</Device>
           <Vendor>Nuvoton</Vendor>
-          <PackID>Nuvoton.NuMicro_DFP.1.3.11</PackID>
-          <PackURL>https://www.nuvoton.com/enu/Documents/KEILSoftwarePack</PackURL>
+          <PackID>Nuvoton.NuMicro_DFP.1.3.19</PackID>
+          <PackURL>https://github.com/OpenNuvoton/cmsis-packs/raw/master/Nuvoton_DFP/</PackURL>
           <Cpu>IRAM(0x20000000,0x4000) IROM(0x00000000,0x20000) CPUTYPE("Cortex-M0") CLOCK(12000000)</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -126,6 +125,14 @@
             <HexOffset>0</HexOffset>
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
+          <TargetDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile></InitializationFile>
+            <Driver>Bin\Nu_Link.dll</Driver>
+          </TargetDlls>
         </DebugOption>
         <Utilities>
           <Flash1>
@@ -184,6 +191,7 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
+            <RvdsMve>0</RvdsMve>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -311,7 +319,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>2</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -320,14 +328,14 @@
             <PlainCh>0</PlainCh>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
-            <wLevel>0</wLevel>
+            <wLevel>3</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>0</uC99>
             <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>3</v6Lang>
-            <v6LangP>1</v6LangP>
+            <v6LangP>3</v6LangP>
             <vShortEn>0</vShortEn>
             <vShortWch>0</vShortWch>
             <v6Lto>0</v6Lto>
@@ -337,7 +345,7 @@
               <MiscControls></MiscControls>
               <Define>__BASE__</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\..\Library\Device\Nuvoton\M031\Include;..\..\..\..\Library\CMSIS\Include;..\..\..\..\Library\StdDriver\inc</IncludePath>
+              <IncludePath>..\..\..\..\Library\Device\Nuvoton\M031\Include;..\..\..\..\Library\CMSIS\Core\Include;..\..\..\..\Library\StdDriver\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -371,7 +379,7 @@
             <ScatterFile></ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>--map --first='startup_M031Series.o(RESET)' --datacompressor=off --info=inline --entry Reset_Handler</Misc>
+            <Misc>--map --first='startup_M031Series_user.o(RESET)' --datacompressor=off --info=inline --entry Reset_Handler</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -387,9 +395,9 @@
               <FilePath>..\..\..\..\Library\Device\Nuvoton\M031\Source\system_M031Series.c</FilePath>
             </File>
             <File>
-              <FileName>startup_M031Series.s</FileName>
+              <FileName>startup_M031Series_user.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\..\..\Library\Device\Nuvoton\M031\Source\ARM\startup_M031Series.s</FilePath>
+              <FilePath>.\startup_M031Series_user.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -434,14 +442,13 @@
       <TargetName>FMC_Boot0</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060528::V5.06 update 5 (build 528)::ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
+      <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>M032SE3AE</Device>
           <Vendor>Nuvoton</Vendor>
-          <PackID>Nuvoton.NuMicro_DFP.1.3.11</PackID>
-          <PackURL>https://www.nuvoton.com/enu/Documents/KEILSoftwarePack</PackURL>
+          <PackID>Nuvoton.NuMicro_DFP.1.3.19</PackID>
+          <PackURL>https://github.com/OpenNuvoton/cmsis-packs/raw/master/Nuvoton_DFP/</PackURL>
           <Cpu>IRAM(0x20000000,0x4000) IROM(0x00000000,0x20000) CPUTYPE("Cortex-M0") CLOCK(12000000)</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -608,6 +615,7 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
+            <RvdsMve>0</RvdsMve>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -761,7 +769,7 @@
               <MiscControls></MiscControls>
               <Define>__BOOT0__</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\..\Library\Device\Nuvoton\M031\Include;..\..\..\..\Library\CMSIS\Include;..\..\..\..\Library\StdDriver\inc</IncludePath>
+              <IncludePath>..\..\..\..\Library\Device\Nuvoton\M031\Include;..\..\..\..\Library\CMSIS\Core\Include;..\..\..\..\Library\StdDriver\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -795,7 +803,7 @@
             <ScatterFile></ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>--map --first='startup_M031Series.o(RESET)' --datacompressor=off --info=inline --entry Reset_Handler</Misc>
+            <Misc>--map --first='startup_M031Series_user.o(RESET)' --datacompressor=off --info=inline --entry Reset_Handler</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -811,9 +819,9 @@
               <FilePath>..\..\..\..\Library\Device\Nuvoton\M031\Source\system_M031Series.c</FilePath>
             </File>
             <File>
-              <FileName>startup_M031Series.s</FileName>
+              <FileName>startup_M031Series_user.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\..\..\Library\Device\Nuvoton\M031\Source\ARM\startup_M031Series.s</FilePath>
+              <FilePath>.\startup_M031Series_user.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -858,14 +866,13 @@
       <TargetName>FMC_Boot1</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060528::V5.06 update 5 (build 528)::ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
+      <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>M032SE3AE</Device>
           <Vendor>Nuvoton</Vendor>
-          <PackID>Nuvoton.NuMicro_DFP.1.3.11</PackID>
-          <PackURL>https://www.nuvoton.com/enu/Documents/KEILSoftwarePack</PackURL>
+          <PackID>Nuvoton.NuMicro_DFP.1.3.19</PackID>
+          <PackURL>https://github.com/OpenNuvoton/cmsis-packs/raw/master/Nuvoton_DFP/</PackURL>
           <Cpu>IRAM(0x20000000,0x4000) IROM(0x00000000,0x20000) CPUTYPE("Cortex-M0") CLOCK(12000000)</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -1032,6 +1039,7 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
+            <RvdsMve>0</RvdsMve>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -1185,7 +1193,7 @@
               <MiscControls></MiscControls>
               <Define>__BOOT1__</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\..\Library\Device\Nuvoton\M031\Include;..\..\..\..\Library\CMSIS\Include;..\..\..\..\Library\StdDriver\inc</IncludePath>
+              <IncludePath>..\..\..\..\Library\Device\Nuvoton\M031\Include;..\..\..\..\Library\CMSIS\Core\Include;..\..\..\..\Library\StdDriver\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1219,7 +1227,7 @@
             <ScatterFile></ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>--map --first='startup_M031Series.o(RESET)' --datacompressor=off --info=inline --entry Reset_Handler</Misc>
+            <Misc>--map --first='startup_M031Series_user.o(RESET)' --datacompressor=off --info=inline --entry Reset_Handler</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -1235,9 +1243,9 @@
               <FilePath>..\..\..\..\Library\Device\Nuvoton\M031\Source\system_M031Series.c</FilePath>
             </File>
             <File>
-              <FileName>startup_M031Series.s</FileName>
+              <FileName>startup_M031Series_user.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\..\..\Library\Device\Nuvoton\M031\Source\ARM\startup_M031Series.s</FilePath>
+              <FilePath>.\startup_M031Series_user.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -1282,14 +1290,13 @@
       <TargetName>FMC_Boot2</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060528::V5.06 update 5 (build 528)::ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
+      <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>M032SE3AE</Device>
           <Vendor>Nuvoton</Vendor>
-          <PackID>Nuvoton.NuMicro_DFP.1.3.11</PackID>
-          <PackURL>https://www.nuvoton.com/enu/Documents/KEILSoftwarePack</PackURL>
+          <PackID>Nuvoton.NuMicro_DFP.1.3.19</PackID>
+          <PackURL>https://github.com/OpenNuvoton/cmsis-packs/raw/master/Nuvoton_DFP/</PackURL>
           <Cpu>IRAM(0x20000000,0x4000) IROM(0x00000000,0x20000) CPUTYPE("Cortex-M0") CLOCK(12000000)</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -1456,6 +1463,7 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
+            <RvdsMve>0</RvdsMve>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -1609,7 +1617,7 @@
               <MiscControls></MiscControls>
               <Define>__BOOT2__</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\..\Library\Device\Nuvoton\M031\Include;..\..\..\..\Library\CMSIS\Include;..\..\..\..\Library\StdDriver\inc</IncludePath>
+              <IncludePath>..\..\..\..\Library\Device\Nuvoton\M031\Include;..\..\..\..\Library\CMSIS\Core\Include;..\..\..\..\Library\StdDriver\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1643,7 +1651,7 @@
             <ScatterFile></ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>--map --first='startup_M031Series.o(RESET)' --datacompressor=off --info=inline --entry Reset_Handler</Misc>
+            <Misc>--map --first='startup_M031Series_user.o(RESET)' --datacompressor=off --info=inline --entry Reset_Handler</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -1659,9 +1667,9 @@
               <FilePath>..\..\..\..\Library\Device\Nuvoton\M031\Source\system_M031Series.c</FilePath>
             </File>
             <File>
-              <FileName>startup_M031Series.s</FileName>
+              <FileName>startup_M031Series_user.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\..\..\Library\Device\Nuvoton\M031\Source\ARM\startup_M031Series.s</FilePath>
+              <FilePath>.\startup_M031Series_user.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -1706,14 +1714,13 @@
       <TargetName>FMC_Boot3</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060528::V5.06 update 5 (build 528)::ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
+      <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>M032SE3AE</Device>
           <Vendor>Nuvoton</Vendor>
-          <PackID>Nuvoton.NuMicro_DFP.1.3.11</PackID>
-          <PackURL>https://www.nuvoton.com/enu/Documents/KEILSoftwarePack</PackURL>
+          <PackID>Nuvoton.NuMicro_DFP.1.3.19</PackID>
+          <PackURL>https://github.com/OpenNuvoton/cmsis-packs/raw/master/Nuvoton_DFP/</PackURL>
           <Cpu>IRAM(0x20000000,0x4000) IROM(0x00000000,0x20000) CPUTYPE("Cortex-M0") CLOCK(12000000)</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -1880,6 +1887,7 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
+            <RvdsMve>0</RvdsMve>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -2033,7 +2041,7 @@
               <MiscControls></MiscControls>
               <Define>__BOOT3__</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\..\Library\Device\Nuvoton\M031\Include;..\..\..\..\Library\CMSIS\Include;..\..\..\..\Library\StdDriver\inc</IncludePath>
+              <IncludePath>..\..\..\..\Library\Device\Nuvoton\M031\Include;..\..\..\..\Library\CMSIS\Core\Include;..\..\..\..\Library\StdDriver\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2067,7 +2075,7 @@
             <ScatterFile></ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>--map --first='startup_M031Series.o(RESET)' --datacompressor=off --info=inline --entry Reset_Handler</Misc>
+            <Misc>--map --first='startup_M031Series_user.o(RESET)' --datacompressor=off --info=inline --entry Reset_Handler</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -2083,9 +2091,9 @@
               <FilePath>..\..\..\..\Library\Device\Nuvoton\M031\Source\system_M031Series.c</FilePath>
             </File>
             <File>
-              <FileName>startup_M031Series.s</FileName>
+              <FileName>startup_M031Series_user.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\..\..\Library\Device\Nuvoton\M031\Source\ARM\startup_M031Series.s</FilePath>
+              <FilePath>.\startup_M031Series_user.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -2130,14 +2138,13 @@
       <TargetName>FMC_BootLD</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060528::V5.06 update 5 (build 528)::ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
+      <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>M032SE3AE</Device>
           <Vendor>Nuvoton</Vendor>
-          <PackID>Nuvoton.NuMicro_DFP.1.3.11</PackID>
-          <PackURL>https://www.nuvoton.com/enu/Documents/KEILSoftwarePack</PackURL>
+          <PackID>Nuvoton.NuMicro_DFP.1.3.19</PackID>
+          <PackURL>https://github.com/OpenNuvoton/cmsis-packs/raw/master/Nuvoton_DFP/</PackURL>
           <Cpu>IRAM(0x20000000,0x4000) IROM(0x00000000,0x20000) CPUTYPE("Cortex-M0") CLOCK(12000000)</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -2304,6 +2311,7 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
+            <RvdsMve>0</RvdsMve>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -2457,7 +2465,7 @@
               <MiscControls></MiscControls>
               <Define>__LDROM__</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\..\Library\Device\Nuvoton\M031\Include;..\..\..\..\Library\CMSIS\Include;..\..\..\..\Library\StdDriver\inc</IncludePath>
+              <IncludePath>..\..\..\..\Library\Device\Nuvoton\M031\Include;..\..\..\..\Library\CMSIS\Core\Include;..\..\..\..\Library\StdDriver\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2491,7 +2499,7 @@
             <ScatterFile></ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>--map --first='startup_M031Series.o(RESET)' --datacompressor=off --info=inline --entry Reset_Handler</Misc>
+            <Misc>--map --first='startup_M031Series_user.o(RESET)' --datacompressor=off --info=inline --entry Reset_Handler</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -2507,9 +2515,9 @@
               <FilePath>..\..\..\..\Library\Device\Nuvoton\M031\Source\system_M031Series.c</FilePath>
             </File>
             <File>
-              <FileName>startup_M031Series.s</FileName>
+              <FileName>startup_M031Series_user.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\..\..\Library\Device\Nuvoton\M031\Source\ARM\startup_M031Series.s</FilePath>
+              <FilePath>.\startup_M031Series_user.s</FilePath>
             </File>
           </Files>
         </Group>

@@ -111,19 +111,6 @@ static int  set_IAP_boot_mode(void)
     return 0;
 }
 
-
-/*
- *  Set stack base address to SP register.
- */
-#ifdef __ARMCC_VERSION
-__asm __set_SP(uint32_t _sp)
-{
-    MSR MSP, r0
-    BX lr
-}
-#endif
-
-
 /**
   * @brief    Load an image to specified flash address. The flash area must have been enabled by
   *           caller. For example, if caller want to program an image to LDROM, FMC_ENABLE_LD_UPDATE()
@@ -196,28 +183,19 @@ int main()
 {
     uint8_t     u8Item;
     uint32_t    u32Data;
-    FUNC_PTR    *func;
-
-    /* Unlock protected registers */
-    SYS_UnlockReg();
 
     /* Init System, peripheral clock and multi-function I/O */
     SYS_Init();
 
-    /* Init UART0 to 115200-8n1 for print message */
-
     /* Configure UART0 and set UART0 baud rate */
     UART0->BAUD = UART_BAUD_MODE2 | UART_BAUD_MODE2_DIVIDER(__HIRC, 115200);
     UART0->LINE = UART_WORD_LEN_8 | UART_PARITY_NONE | UART_STOP_BIT_1;
-
 
     printf("\r\n\n\n");
     printf("+----------------------------------------+\n");
     printf("|        M031 FMC IAP Sample Code        |\n");
     printf("|              [APROM code]              |\n");
     printf("+----------------------------------------+\n");
-
-    SYS_UnlockReg();
 
     /* Checking if flash page size matches with target chip's */
     if( (GET_CHIP_SERIES_NUM == CHIP_SERIES_NUM_I) || (GET_CHIP_SERIES_NUM == CHIP_SERIES_NUM_G) )
@@ -243,6 +221,10 @@ int main()
         }
     }
 
+    /* Unlock protected registers */
+    SYS_UnlockReg();
+
+    /* Enable FMC ISP function. Before using FMC function, it should unlock system register first. */
     FMC->ISPCTL |=  FMC_ISPCTL_ISPEN_Msk;
 
     /*
@@ -354,26 +336,17 @@ int main()
             FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;
             while (FMC->ISPTRG & FMC_ISPTRG_ISPGO_Msk) ;
 
-            /*
-             *  The reset handler address of an executable image is located at offset 0x4.
-             *  Thus, this sample get reset handler address of LDROM code from FMC_LDROM_BASE + 0x4.
-             */
-            func = (FUNC_PTR *)*(uint32_t *)(FMC_LDROM_BASE + 4);
-            /*
-             *  The stack base address of an executable image is located at offset 0x0.
-             *  Thus, this sample get stack base address of LDROM code from FMC_LDROM_BASE + 0x0.
-             */
-#ifdef __GNUC__                        /* for GNU C compiler */
-            u32Data = *(uint32_t *)FMC_LDROM_BASE;
-            asm("msr msp, %0" : : "r" (u32Data));
-#else
-            __set_SP(*(uint32_t *)FMC_LDROM_BASE);
-#endif
-            /*
-             *  Branch to the LDROM code's reset handler in way of function call.
-             */
-            func();
-            break;
+            /* Software reset to boot to LDROM */
+            __DSB();                                                          /* Ensure all outstanding memory accesses included
+                                                                       buffered write are completed before reset */
+            SCB->AIRCR  = ((0x5FAUL << SCB_AIRCR_VECTKEY_Pos) |
+                 SCB_AIRCR_SYSRESETREQ_Msk);
+            __DSB();                                                          /* Ensure completion of memory access */
+
+            for(;;)                                                           /* wait until reset */
+            {
+                __NOP();
+            }
 
         default :
             /* invalid selection */

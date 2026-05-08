@@ -15,6 +15,12 @@
 #include "uart_transfer.h"
 #include "ISP_USER.h"
 
+/* Add implementations to fix linker warnings from the newlib-nano C library in VSCode-GCC14.3.1 */
+void _close(void) {}
+void _lseek(void) {}
+void _read_r(void) {}
+void _write_r(void) {}
+
 /*---------------------------------------------------------------------------------------------------------*/
 /* Init system clock and UART single wire function                                                              */
 /*---------------------------------------------------------------------------------------------------------*/
@@ -55,7 +61,7 @@ void SYS_Init(void)
     /* Set PB multi-function pins for UART0 RXD=PB.12 */
     SYS->GPB_MFPH = (SYS->GPB_MFPH & ~(SYS_GPB_MFPH_PB12MFP_Msk)) | (SYS_GPB_MFPH_PB12MFP_UART0_RXD);
 }
-#define UART_RX_IDEL(uart) (((uart)->FIFOSTS & UART_FIFOSTS_RXIDLE_Msk )>> UART_FIFOSTS_RXIDLE_Pos)
+#define UART_RX_IDLE(uart) (((uart)->FIFOSTS & UART_FIFOSTS_RXIDLE_Msk )>> UART_FIFOSTS_RXIDLE_Pos)
 /*---------------------------------------------------------------------------------------------------------*/
 /*  Main Function                                                                                          */
 /*---------------------------------------------------------------------------------------------------------*/
@@ -87,7 +93,7 @@ int32_t main(void)
         }
     }
 
-    //Enable uart single wire funciton
+    //Enable uart single wire function
     UART0->FUNCSEL = ((UART0->FUNCSEL & (~UART_FUNCSEL_FUNCSEL_Msk)) | UART_FUNCSEL_SINGLE_WIRE);
     //Enable ISP clock
     CLK->AHBCLK |= CLK_AHBCLK_ISPCKEN_Msk;
@@ -142,8 +148,8 @@ _ISP:
             bUartDataReady = FALSE;
             //Parser command and execution
             ParseCmd(uart_rcvbuf, 64);
-            //wait rx bus is idel.
-            while (!UART_RX_IDEL(UART0)) {};
+            //wait rx bus is idle.
+            while (!UART_RX_IDLE(UART0)) {};
             //return respond
             PutString();
         }

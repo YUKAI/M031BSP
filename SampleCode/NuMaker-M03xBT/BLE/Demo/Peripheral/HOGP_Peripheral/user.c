@@ -555,7 +555,7 @@ static void BleEvent_Callback(BleCmdEvent event, void *param)
 
     case BLECMD_EVENT_PASSKEY_CONFIRM:
     {
-        //enter a scanned Passkey or use a randomly generaated passkey.
+        //enter a scanned Passkey or use a randomly generated passkey.
 #if (IOCAPABILITY_SETTING == DISPLAY_ONLY)
         BLE_Event_PassKeyConfirmParam *event_param = (BLE_Event_PassKeyConfirmParam *)param;
         setBLE_PairingPassKey(event_param->hostId, (uint32_t)BLE_PAIRING_KEY);
@@ -652,49 +652,49 @@ static void BleService_HID_Link0Handler(uint8_t hostId, uint8_t cmdAccess, uint8
     case BLESERVICE_HID_BOOT_KEYBOARD_INPUT_REPORT_WRITE_EVENT:
         for (i = 0; i < length; i++)
         {
-            *(&bleProfile_link0_info.serviceHID_info_s.data.hid_boot_keyboard_intput_report[0] + i) = *(data + i);
+            bleProfile_link0_info.serviceHID_info_s.data.hid_boot_keyboard_intput_report[i] = *(data + i);
         }
         break;
 
     case BLESERVICE_HID_BOOT_KEYBOARD_OUTPUT_REPORT_WRITE_EVENT:
         for (i = 0; i < length; i++)
         {
-            *(&bleProfile_link0_info.serviceHID_info_s.data.hid_boot_keyboard_output_report[0] + i) = *(data + i);
+            bleProfile_link0_info.serviceHID_info_s.data.hid_boot_keyboard_output_report[i] = *(data + i);
         }
         break;
 
     case BLESERVICE_HID_KEYBOARD_INPUT_REPORT_WRITE_EVENT:
         for (i = 0; i < length; i++)
         {
-            *(&bleProfile_link0_info.serviceHID_info_s.data.hid_keyboard_intput_report[0] + i) = *(data + i);
+            bleProfile_link0_info.serviceHID_info_s.data.hid_keyboard_intput_report[i] = *(data + i);
         }
         break;
 
     case BLESERVICE_HID_KEYBOARD_OUTPUT_REPORT_WRITE_EVENT:
         for (i = 0; i < length; i++)
         {
-            *(&bleProfile_link0_info.serviceHID_info_s.data.hid_keyboard_output_report[0] + i) = *(data + i);
+            bleProfile_link0_info.serviceHID_info_s.data.hid_keyboard_output_report[i] = *(data + i);
         }
         break;
 
     case BLESERVICE_HID_BOOT_MOUSE_INPUT_REPORT_WRITE_EVENT:
         for (i = 0; i < length; i++)
         {
-            *(&bleProfile_link0_info.serviceHID_info_s.data.hid_boot_mouse_input_report[0] + i) = *(data + i);
+            bleProfile_link0_info.serviceHID_info_s.data.hid_boot_mouse_input_report[i] = *(data + i);
         }
         break;
 
     case BLESERVICE_HID_MOUSE_INPUT_REPORT_WRITE_EVENT:
         for (i = 0; i < length; i++)
         {
-            *(&bleProfile_link0_info.serviceHID_info_s.data.hid_mouse_input_report[0] + i) = *(data + i);
+            bleProfile_link0_info.serviceHID_info_s.data.hid_mouse_input_report[i] = *(data + i);
         }
         break;
 
     case BLESERVICE_HID_CONSUMER_INPUT_REPORT_WRITE_EVENT:
         for (i = 0; i < length; i++)
         {
-            *(&bleProfile_link0_info.serviceHID_info_s.data.hid_consumer_input_report[0] + i) = *(data + i);
+            bleProfile_link0_info.serviceHID_info_s.data.hid_consumer_input_report[i] = *(data + i);
         }
         break;
 
