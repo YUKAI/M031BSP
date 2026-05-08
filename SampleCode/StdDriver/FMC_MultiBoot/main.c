@@ -135,12 +135,8 @@ int32_t main(void)
     uint8_t u8Ch;
     uint32_t u32Data;
 
-
     /* Init System, IP clock and multi-function I/O. */
     SYS_Init();
-    
-    /* Unlock protected registers to operate FMC ISP function */
-    SYS_UnlockReg();
 
     /* Configure UART0: 115200, 8-bit word, no parity bit, 1 stop bit. */
     UART_Open(UART0, 115200);
@@ -165,8 +161,11 @@ int32_t main(void)
             while(SYS->PDID);
         }
     }
+    
+    /* Unlock protected registers */
+    SYS_UnlockReg();
 
-    /* Enable FMC ISP function */
+    /* Enable FMC ISP function. Before using FMC function, it should unlock system register first. */
     FMC_Open();
 
     /*
@@ -175,7 +174,7 @@ int32_t main(void)
         to remap page of VECMAP to 0x0~0x1ff.
         NOTE: VECMAP only valid when CBS = 00'b or 10'b.
 
-        The sample code didn't use stanard C library for UART message due to the size of LDROM.
+        The sample code didn't use standard C library for UART message due to the size of LDROM.
 
         To use this sample code, please:
         1. Build all targets and download to device individually. The targets are:

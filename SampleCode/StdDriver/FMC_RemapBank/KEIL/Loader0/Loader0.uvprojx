@@ -10,8 +10,7 @@
       <TargetName>Loader0</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060528::V5.06 update 5 (build 528)::ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
+      <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>ARMCM0</Device>
@@ -126,6 +125,14 @@
             <HexOffset>0</HexOffset>
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
+          <TargetDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile></InitializationFile>
+            <Driver>Bin\Nu_Link.dll</Driver>
+          </TargetDlls>
         </DebugOption>
         <Utilities>
           <Flash1>
@@ -337,7 +344,7 @@
               <MiscControls></MiscControls>
               <Define>PAGE_SIZE_2048</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\..\..\Library\Device\Nuvoton\M031\Include;..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\Library\StdDriver\inc</IncludePath>
+              <IncludePath>..\..\..\..\..\Library\Device\Nuvoton\M031\Include;..\..\..\..\..\Library\CMSIS\Core\Include;..\..\..\..\..\Library\StdDriver\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>

@@ -43,11 +43,14 @@ void SYS_Init(void)
     PB->MODE = (PB->MODE & ~(GPIO_MODE_MODE0_Msk << (6 << 1))) | (GPIO_MODE_OUTPUT << (6 << 1));
     ReadyPin = 1;
 #endif
+    /* Lock protected registers */
+    SYS_LockReg();
 }
 
 int main(void)
 {
     uint32_t cmd_buff[16];
+
     SYS_Init();
 
     /* Checking if flash page size matches with target chip's */
@@ -71,7 +74,13 @@ int main(void)
     }
 
     CLK->AHBCLK |= CLK_AHBCLK_ISPCKEN_Msk;
+
+    /* Unlock protected registers */
+    SYS_UnlockReg();
+
+    /* Enable FMC ISP function. Before using FMC function, it should unlock system register first. */
     FMC->ISPCTL |= (FMC_ISPCTL_ISPEN_Msk | FMC_ISPCTL_APUEN_Msk);
+
     g_apromSize = GetApromSize();
     GetDataFlashInfo(&g_dataFlashAddr, &g_dataFlashSize);
     I2C_Init();
@@ -98,10 +107,13 @@ _ISP:
     {
         if (bI2cDataReady == 1)
         {
+            /* Disable I2C IRQ until ParseCmd() is finished to prevent returning incomplete data prematurely */
+            NVIC_DisableIRQ(I2C0_IRQn);        	
             memcpy(cmd_buff, i2c_rcvbuf, 64);
             bI2cDataReady = 0;
             ParseCmd((unsigned char *)cmd_buff, 64);
             bISPDataReady = 1;
+            NVIC_EnableIRQ(I2C0_IRQn);            
 #ifdef ReadyPin
             ReadyPin = 0;
 #endif

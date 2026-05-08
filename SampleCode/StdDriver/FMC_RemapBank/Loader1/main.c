@@ -94,9 +94,6 @@ int32_t main(void)
     /* Init System, IP clock and multi-function I/O. */
     SYS_Init();
 
-    /* Unlock protected registers to operate FMC ISP function */
-    SYS_UnlockReg();
-
     /* Configure UART0: 115200, 8-bit word, no parity bit, 1 stop bit. */
     UART_Open(UART0, 115200);
 
@@ -107,8 +104,12 @@ int32_t main(void)
         goto lexit;
     }
 
-    /* Enable FMC ISP function */
+    /* Unlock protected registers */
+    SYS_UnlockReg();
+
+    /* Enable FMC ISP function. Before using FMC function, it should unlock system register first. */
     FMC_Open();
+
     SetIAPBoot();
     if (FMC_ReadConfig(u32Config, 3) < 0)
     {
@@ -123,52 +124,60 @@ int32_t main(void)
         printf("+-------------------------------+\n");
         printf("|   Bank Remapping Sample Code  |\n");
         printf("+-------------------------------+\n");
-        printf("| [ 0 ]: Switch to bank0        |\n");
-        printf("| [ 1 ]: Switch to bank1        |\n");
+        printf("| [ 0 ]: Switch to bank 0 App   |\n");
+        printf("| [ 1 ]: Switch to bank 1 App   |\n");
         printf("| [ Other ]: Exit               |\n");
-        printf("| Current Bank %d               |\n", (FMC->ISPSTS&BIT30)?1:0);
+        printf("| Current Bank %d                |\n", (FMC->ISPSTS&BIT30)?1:0);
         printf("+-------------------------------+\n");
         ch = getchar();
         if(ch=='0')
         {
-            printf("Bank0 App0 remap to address 0\n");
+            printf("Bank 0 App0 remap to address 0\n");
+
             while(UART_IS_TX_EMPTY(UART0)==0);
 
-            /* All ISP commands are relative to physical address except FMC_ISPCMD_VECMAP */
-            FMC_SetVectorPageAddr(0x4000);
-            if (g_FMC_i32ErrCode != 0)
-            {
-                printf("FMC_SetVectorPageAddr failed!\n");
-                return -1;
-            }
             /* After bank swap command, Bank0 virtual address 0x4000 will remap to 0 */
             FMC_RemapBank(0);
+
             if (g_FMC_i32ErrCode != 0)
             {
                 printf("FMC_RemapBank failed!\n");
                 return -1;
             }
+            /* All ISP commands are relative to physical address except FMC_ISPCMD_VECMAP */
+            FMC_SetVectorPageAddr(0x4000);
+
+            if (g_FMC_i32ErrCode != 0)
+            {
+                printf("FMC_SetVectorPageAddr failed!\n");
+                return -1;
+            }
+
             NVIC_SystemReset();
         }
         else if(ch=='1')
         {
-            printf("Bank1 App1 remap to address 0\n");
+            printf("Bank 1 App1 remap to address 0\n");
             while(UART_IS_TX_EMPTY(UART0)==0);
 
-            /* All ISP commands are relative to physical address except FMC_ISPCMD_VECMAP */
-            FMC_SetVectorPageAddr(0x4000);
-            if (g_FMC_i32ErrCode != 0)
-            {
-                printf("FMC_SetVectorPageAddr failed!\n");
-                return -1;
-            }
             /* After bank swap command, Bank1 virtual address 0x4000 will remap to 0 */
             FMC_RemapBank(1);
+
             if (g_FMC_i32ErrCode != 0)
             {
                 printf("FMC_RemapBank failed!\n");
                 return -1;
             }
+
+            /* All ISP commands are relative to physical address except FMC_ISPCMD_VECMAP */
+            FMC_SetVectorPageAddr(0x4000);
+
+            if (g_FMC_i32ErrCode != 0)
+            {
+                printf("FMC_SetVectorPageAddr failed!\n");
+                return -1;
+            }
+
             NVIC_SystemReset();
         }
         else
